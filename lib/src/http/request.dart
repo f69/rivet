@@ -1,7 +1,8 @@
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:mime/mime.dart';
+
 import 'file.dart';
 
 class RivetRequest {
@@ -16,7 +17,7 @@ class RivetRequest {
   Map<String, String> query = {}; // query params e.g., ?q=search
   Map<String, List<String>> queryAll =
       {}; // all query params e.g., ?ids=1&ids=2
-  Map<String, dynamic>? jsonBody; // parsed JSON from middleware
+  dynamic jsonBody; // parsed JSON from middleware
 
   // Form data
   Map<String, String> formFields = {};
