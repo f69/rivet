@@ -78,7 +78,7 @@ class RivetRequest {
   }
 
   /// Parse JSON body
-  Future<Map<String, dynamic>> json() async {
+  Future<dynamic> json() async {
     if (jsonBody != null) return jsonBody!;
     final bodyString = await utf8.decoder.bind(raw).join();
     jsonBody = jsonDecode(bodyString);
