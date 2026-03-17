@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
 
 typedef WebSocketHandler = FutureOr<void> Function(WebSocketConnection);
 
@@ -9,8 +9,9 @@ class WebSocketConnection {
   final String id;
   final Map<String, dynamic> data = {};
   final Set<String> _rooms = {};
+  final HttpRequest connectionRequest;
 
-  WebSocketConnection(this.socket, this.id);
+  WebSocketConnection(this.socket, this.id, this.connectionRequest);
 
   void send(dynamic message) {
     if (message is String) {
@@ -56,7 +57,7 @@ class WebSocketManager {
   ) async {
     final socket = await WebSocketTransformer.upgrade(request);
     final id = 'ws_${_nextId++}';
-    final connection = WebSocketConnection(socket, id);
+    final connection = WebSocketConnection(socket, id, request);
 
     _connections[id] = connection;
 

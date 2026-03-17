@@ -2,17 +2,17 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
-import '../router/router.dart';
-import '../router/route.dart';
-import '../router/group.dart';
-import '../websocket/websocket.dart';
-import '../plugins/plugin.dart';
-import '../middleware/middleware.dart';
 import '../middleware/error_handler.dart';
 import '../middleware/json_parser.dart';
+import '../middleware/middleware.dart';
+import '../plugins/plugin.dart';
+import '../router/group.dart';
+import '../router/route.dart';
+import '../router/router.dart';
+import '../websocket/websocket.dart';
+import 'isolate_manager.dart';
 import 'request.dart';
 import 'response.dart';
-import 'isolate_manager.dart';
 
 class RivetServer {
   final Router _router = Router();
@@ -154,7 +154,16 @@ class RivetServer {
 
   // Send RivetResponse
   Future<void> _sendResponse(HttpResponse raw, RivetResponse res) async {
-    raw.statusCode = res.statusCode;
+    try {
+      raw.statusCode = res.statusCode;
+    } catch (e) {
+      // WebSocket writes outgoing message
+      if (e is StateError && e.message == 'Header already sent') {
+        await raw.close();
+        return;
+      }
+      rethrow;
+    }
 
     // Set all headers from response
     res.headers.forEach((key, value) {
