@@ -14,3 +14,4 @@ export 'src/middleware/rate_limit.dart';
 export 'src/middleware/static_handler.dart';
 export 'src/router/router.dart';
 export 'src/utils/exception.dart';
+export 'src/websocket/websocket.dart';
